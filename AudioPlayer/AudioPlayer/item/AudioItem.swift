@@ -213,15 +213,15 @@ open class AudioItem: NSObject {
         items.forEach {
             if let commonKey = $0.commonKey {
                 switch commonKey {
-                case AVMetadataKey.commonKeyTitle where title == nil:
+                case .commonKeyTitle where title == nil:
                     title = $0.value as? String
-                case AVMetadataKey.commonKeyArtist where artist == nil:
+                case .commonKeyArtist where artist == nil:
                     artist = $0.value as? String
-                case AVMetadataKey.commonKeyAlbumName where album == nil:
+                case .commonKeyAlbumName where album == nil:
                     album = $0.value as? String
-                case AVMetadataKey.id3MetadataKeyTrackNumber where trackNumber == nil:
+                case .id3MetadataKeyTrackNumber where trackNumber == nil:
                     trackNumber = $0.value as? NSNumber
-                case AVMetadataKey.commonKeyArtwork where artwork == nil:
+                case .commonKeyArtwork where artwork == nil:
                     artworkImage = ($0.value as? Data).flatMap { Image(data: $0) }
                 default:
                     break
