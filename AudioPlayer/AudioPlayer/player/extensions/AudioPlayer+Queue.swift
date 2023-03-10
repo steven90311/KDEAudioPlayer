@@ -14,7 +14,7 @@ extension AudioPlayer {
 
     /// The current item index in queue.
     public var currentItemIndexInQueue: Int? {
-        return currentItem.flatMap { queue?.items.firstIndex(of: $0) }
+        return currentItem.flatMap { queue?.items.index(of: $0) }
     }
 
     /// A boolean value indicating whether there is a next item to play or not.
@@ -42,8 +42,7 @@ extension AudioPlayer {
     public func play(items: [AudioItem], startAtIndex index: Int = 0) {
         if !items.isEmpty {
             queue = AudioItemQueue(items: items, mode: mode)
-            queue?.delegate = self
-            if let realIndex = queue?.queue.firstIndex(of: items[index]) {
+            if let realIndex = queue?.queue.index(of: items[index]) {
                 queue?.nextPosition = realIndex
             }
             currentItem = queue?.nextItem()
@@ -78,17 +77,5 @@ extension AudioPlayer {
     /// - Parameter index: The index of the item to remove.
     public func removeItem(at index: Int) {
         queue?.remove(at: index)
-    }
-}
-
-extension AudioPlayer: AudioItemQueueDelegate {
-    /// Returns a boolean value indicating whether an item should be consider playable in the queue.
-    ///
-    /// - Parameters:
-    ///   - queue: The queue.
-    ///   - item: The item we ask the information for.
-    /// - Returns: A boolean value indicating whether an item should be consider playable in the queue.
-    func audioItemQueue(_ queue: AudioItemQueue, shouldConsiderItem item: AudioItem) -> Bool {
-        return delegate?.audioPlayer(self, shouldStartPlaying: item) ?? true
     }
 }

@@ -59,7 +59,6 @@ public class AudioPlayer: NSObject {
             }
             player?.volume = volume
             player?.rate = rate
-            updatePlayerForBufferingStrategy()
 
             if let player = player {
                 playerEventProducer.player = player
@@ -101,20 +100,9 @@ public class AudioPlayer: NSObject {
                     backgroundHandler.beginBackgroundTask()
                     return
                 }
-                
-                //Reset special state flags
-                pausedForInterruption = false
-                
-                //Create new AVPlayerItem
-                let playerItem = AVPlayerItem(url: info.url)
-                
-                if #available(iOS 10.0, tvOS 10.0, OSX 10.12, *) {
-                    playerItem.preferredForwardBufferDuration = self.preferredForwardBufferDuration
-                }
 
                 //Creates new player
-                player = AVPlayer(playerItem: playerItem)
-                
+                player = AVPlayer(url: info.url)
                 currentQuality = info.quality
 
                 //Updates information on the lock screen
@@ -218,21 +206,6 @@ public class AudioPlayer: NSObject {
             }
         }
     }
-    
-    /// Defines the buffering strategy used to determine how much to buffer before starting playback
-    public var bufferingStrategy: AudioPlayerBufferingStrategy = .defaultBuffering {
-        didSet {
-            updatePlayerForBufferingStrategy()
-        }
-    }
-    
-    /// Defines the preferred buffer duration in seconds before playback begins. Defaults to 60.
-    /// Works on iOS/tvOS 10+ when `bufferingStrategy` is `.playWhenPreferredBufferDurationFull`.
-    public var preferredBufferDurationBeforePlayback = TimeInterval(60)
-    
-    /// Defines the preferred size of the forward buffer for the underlying `AVPlayerItem`.
-    /// Works on iOS/tvOS 10+, default is 0, which lets `AVPlayer` decide.
-    public var preferredForwardBufferDuration = TimeInterval(0)
 
     /// Defines how to behave when the user is seeking through the lockscreen or the control center.
     ///
@@ -360,7 +333,7 @@ public class AudioPlayer: NSObject {
     /// - Parameter active: A boolean value indicating whether the audio session should be set to active or not.
     func setAudioSession(active: Bool) {
         #if os(iOS) || os(tvOS)
-            _ = try? AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
+            _ = try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
             _ = try? AVAudioSession.sharedInstance().setActive(active)
         #endif
     }
@@ -369,7 +342,7 @@ public class AudioPlayer: NSObject {
 
     /// Boolean value indicating whether the player should resume playing (after buffering)
     var shouldResumePlaying: Bool {
-        return !state.isPaused &&
+        return !pausedForInterruption && !state.isPaused &&
             (stateWhenConnectionLost.map { !$0.isPaused } ?? true) &&
             (stateBeforeBuffering.map { !$0.isPaused } ?? true)
     }
@@ -391,23 +364,6 @@ public class AudioPlayer: NSObject {
             //We can't call self.seek(to:) in here since the player is new
             //and `cip` is probably not in the seekableTimeRanges.
             player?.seek(to: CMTime(timeInterval: cip))
-        }
-    }
-    
-    /// Updates the current player based on the current buffering strategy.
-    /// Only has an effect on iOS 10+, tvOS 10+ and macOS 10.12+
-    func updatePlayerForBufferingStrategy() {
-        if #available(iOS 10.0, tvOS 10.0, OSX 10.12, *) {
-            player?.automaticallyWaitsToMinimizeStalling = self.bufferingStrategy != .playWhenBufferNotEmpty
-        }
-    }
-    
-    /// Updates a given player item based on the `preferredForwardBufferDuration` set.
-    /// Only has an effect on iOS 10+, tvOS 10+ and macOS 10.12+
-    func updatePlayerItemForBufferingStrategy(_ playerItem: AVPlayerItem) {
-        //Nothing strategy-specific yet
-        if #available(iOS 10.0, tvOS 10.0, OSX 10.12, *) {
-            playerItem.preferredForwardBufferDuration = self.preferredForwardBufferDuration
         }
     }
 }

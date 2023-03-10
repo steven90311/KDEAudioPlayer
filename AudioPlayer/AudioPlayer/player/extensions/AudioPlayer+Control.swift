@@ -14,9 +14,6 @@ import CoreMedia
 extension AudioPlayer {
     /// Resumes the player.
     public func resume() {
-        //Ensure pause flag is no longer set
-        pausedForInterruption = false
-        
         player?.rate = rate
 
         //We don't wan't to change the state to Playing in case it's Buffering. That
@@ -41,22 +38,11 @@ extension AudioPlayer {
         //app is in foreground.
         backgroundHandler.beginBackgroundTask()
     }
-    
-    /// Starts playing the current item immediately. Works on iOS/tvOS 10+ and macOS 10.12+
-    func playImmediately() {
-        if #available(iOS 10.0, tvOS 10.0, OSX 10.12, *) {
-            self.state = .playing
-            player?.playImmediately(atRate: rate)
-            
-            retryEventProducer.stopProducingEvents()
-            backgroundHandler.endBackgroundTask()
-        }
-    }
 
     /// Plays previous item in the queue or rewind current item.
     public func previous() {
-        if let previousItem = queue?.previousItem() {
-            currentItem = previousItem
+        if hasPrevious {
+            currentItem = queue?.previousItem()
         } else {
             seek(to: 0)
         }
@@ -64,15 +50,15 @@ extension AudioPlayer {
 
     /// Plays next item in the queue.
     public func next() {
-        if let nextItem = queue?.nextItem() {
-            currentItem = nextItem
+        if hasNext {
+            currentItem = queue?.nextItem()
         }
     }
 
     /// Plays the next item in the queue and if there isn't, the player will stop.
     public func nextOrStop() {
-        if let nextItem = queue?.nextItem() {
-            currentItem = nextItem
+        if hasNext {
+            next()
         } else {
             stop()
         }
@@ -109,10 +95,9 @@ extension AudioPlayer {
     ///         if the operation has finished.
     public func seek(to time: TimeInterval,
                      byAdaptingTimeToFitSeekableRanges: Bool = false,
-                     toleranceBefore: CMTime = CMTime.positiveInfinity,
-                     toleranceAfter: CMTime = CMTime.positiveInfinity,
-                     completionHandler: ((Bool) -> Void)? = nil)
-    {
+                     toleranceBefore: CMTime = kCMTimePositiveInfinity,
+                     toleranceAfter: CMTime = kCMTimePositiveInfinity,
+                     completionHandler: ((Bool) -> Void)? = nil) {
         guard let earliest = currentItemSeekableRange?.earliest,
             let latest = currentItemSeekableRange?.latest else {
                 //In case we don't have a valid `seekableRange`, although this *shouldn't* happen
@@ -204,10 +189,9 @@ extension AudioPlayer {
 extension AudioPlayer {
     
     fileprivate func seekSafely(to time: TimeInterval,
-                                toleranceBefore: CMTime = CMTime.positiveInfinity,
-                                toleranceAfter: CMTime = CMTime.positiveInfinity,
-                                completionHandler: ((Bool) -> Void)?)
-    {
+              toleranceBefore: CMTime = kCMTimePositiveInfinity,
+              toleranceAfter: CMTime = kCMTimePositiveInfinity,
+              completionHandler: ((Bool) -> Void)?) {
         guard let completionHandler = completionHandler else {
             player?.seek(to: CMTime(timeInterval: time), toleranceBefore: toleranceBefore,
                          toleranceAfter: toleranceAfter)

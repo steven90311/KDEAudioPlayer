@@ -46,7 +46,6 @@ extension AudioPlayer {
 
         let cip = currentItemProgression
         let item = AVPlayerItem(url: url)
-        self.updatePlayerItemForBufferingStrategy(item)
 
         qualityIsBeingChanged = true
         player?.replaceCurrentItem(with: item)

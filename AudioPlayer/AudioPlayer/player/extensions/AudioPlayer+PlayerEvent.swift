@@ -6,8 +6,6 @@
 //  Copyright © 2016 Kevin Delannoy. All rights reserved.
 //
 
-import CoreMedia
-
 extension AudioPlayer {
     /// Handles player events.
     ///
@@ -29,8 +27,8 @@ extension AudioPlayer {
             pausedForInterruption = true
             pause()
 
-        case .interruptionEnded(let shouldResume) where pausedForInterruption:
-            if resumeAfterInterruption && shouldResume {
+        case .interruptionEnded where pausedForInterruption:
+            if resumeAfterInterruption {
                 resume()
             }
             pausedForInterruption = false
@@ -51,13 +49,6 @@ extension AudioPlayer {
         case .loadedMoreRange:
             if let currentItem = currentItem, let currentItemLoadedRange = currentItemLoadedRange {
                 delegate?.audioPlayer(self, didLoad: currentItemLoadedRange, for: currentItem)
-                
-                if bufferingStrategy == .playWhenPreferredBufferDurationFull && state == .buffering,
-                    let currentItemLoadedAhead = currentItemLoadedAhead,
-                    currentItemLoadedAhead.isNormal,
-                    currentItemLoadedAhead >= self.preferredBufferDurationBeforePlayback {
-                        playImmediately()
-                }
             }
 
         case .progressed(let time):
@@ -89,7 +80,6 @@ extension AudioPlayer {
                 stateBeforeBuffering = nil
                 state = .playing
                 player?.rate = rate
-                playImmediately()
             } else {
                 player?.rate = 0
                 state = .paused
@@ -99,13 +89,10 @@ extension AudioPlayer {
             retryEventProducer.stopProducingEvents()
             backgroundHandler.endBackgroundTask()
 
-        case .routeChanged(let deviceDisconnected):
-            // When a route changes because a device got disconnected (e.g. unplugged headphones)
-            // the player can be paused. This interruption must respect interruptionBegan.
-            //TODO: Handle other reasons.
-            if deviceDisconnected,
-                let currentItemTimebase = player?.currentItem?.timebase,
-                CMTimebaseGetRate(currentItemTimebase) == 0 {
+        case .routeChanged:
+            //In some route changes, the player pause automatically
+            //TODO: there should be a check if state == playing
+            if let player = player, player.rate == 0 {
                 state = .paused
             }
 

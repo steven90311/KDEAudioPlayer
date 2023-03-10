@@ -483,7 +483,7 @@
 					};
 					462679471AED567D003771C9 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 937TDBQ4TP;
+						DevelopmentTeam = FMC83QG7D6;
 						LastSwiftMigration = 0930;
 					};
 					46DAE4B21C4026E100572EB2 = {
@@ -832,7 +832,7 @@
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/AudioPlayer iOS/Info-iOS.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = be.delannoyk.AudioPlayer;
 				PRODUCT_MODULE_NAME = AudioPlayer;
@@ -855,7 +855,7 @@
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/AudioPlayer iOS/Info-iOS.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = be.delannoyk.AudioPlayer;
 				PRODUCT_MODULE_NAME = AudioPlayer;
@@ -869,7 +869,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = 937TDBQ4TP;
+				DEVELOPMENT_TEAM = FMC83QG7D6;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -887,7 +887,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = 937TDBQ4TP;
+				DEVELOPMENT_TEAM = FMC83QG7D6;
 				INFOPLIST_FILE = AudioPlayerTests/supporting_files/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "be.delannoyk.$(PRODUCT_NAME:rfc1034identifier)";
