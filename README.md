@@ -88,7 +88,7 @@ override func remoteControlReceivedWithEvent(event: UIEvent?) {
 * Add more unit tests
 * Add Objective-C support if possible ([#67](https://github.com/delannoyk/AudioPlayer/issues/67))
 * Refactor current state handling
-
+ 
 ## License
 
 The MIT License (MIT)
