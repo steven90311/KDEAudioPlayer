@@ -1,5 +1,5 @@
 AudioPlayer
-===========
+=========== 
 [![Build Status](https://travis-ci.org/delannoyk/AudioPlayer.svg?branch=master)](https://travis-ci.org/delannoyk/AudioPlayer)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 ![CocoaPods Compatible](https://img.shields.io/cocoapods/v/KDEAudioPlayer.svg)
@@ -9,14 +9,15 @@ AudioPlayer
 AudioPlayer is a wrapper around AVPlayer. It also offers cool features such as:
 * Quality control based on number of interruption (buffering) and time delay
 * Retry if player fails
-* Connection handling
+* Connection handling  
 * Audio item enqueuing
 * Player mode (Repeat, Repeat all, Shuffle)
 * MPNowPlayingInfoCenter
-* A high level of customization
-  
-## Installation
 
+* A high level of customization  
+
+## Installation
+   
 * CocoaPods: `pod 'KDEAudioPlayer'`
 * Carthage: `github "delannoyk/AudioPlayer"`
 
@@ -88,7 +89,7 @@ override func remoteControlReceivedWithEvent(event: UIEvent?) {
 * Add more unit tests
 * Add Objective-C support if possible ([#67](https://github.com/delannoyk/AudioPlayer/issues/67))
 * Refactor current state handling
-
+ 
 ## License
 
 The MIT License (MIT)
