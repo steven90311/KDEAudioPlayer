@@ -9,7 +9,7 @@ AudioPlayer
 AudioPlayer is a wrapper around AVPlayer. It also offers cool features such as:
 * Quality control based on number of interruption (buffering) and time delay
 * Retry if player fails
-* Connection handling
+* Connection handling  
 * Audio item enqueuing
 * Player mode (Repeat, Repeat all, Shuffle)
 * MPNowPlayingInfoCenter
